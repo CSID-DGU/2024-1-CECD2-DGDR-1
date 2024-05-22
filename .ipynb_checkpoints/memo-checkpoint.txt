@@ -1,0 +1,9 @@
+https://github.com/facebookresearch/faiss/issues/2890
+This is a bug in Faiss 1.7.4, that the conda package doesn't specify the dependencies correctly. The fix is to install mkl separately, conda install mkl=2021. This is already fixed in the nightly.
+
+
+Name: torch
+Version: 1.11.0+cu113
+
+
+index runner는 wiki_00에서 </doc>으로 passage 잘 분리시키기만 하면 된다.

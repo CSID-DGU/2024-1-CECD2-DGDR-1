@@ -209,10 +209,15 @@ class Trainer:
 
 
 if __name__ == "__main__":
-    device = torch.device("cuda:1")
+    device = torch.device("cuda:0")
     model = KobertBiEncoder()
-    train_dataset = KorQuadDataset("dataset/KorQuAD_v1.0_train.json")
+    # train_dataset = KorQuadDataset("dataset/KorQuAD_v1.0_train.json")
+    # valid_dataset = KorQuadDataset("dataset/KorQuAD_v1.0_dev.json")
+    train_dataset = KorQuadDataset("dataset/KorQuAD_v1.0_dev.json")
     valid_dataset = KorQuadDataset("dataset/KorQuAD_v1.0_dev.json")
+    # for i in train_dataset.dataset:
+    #     print(i)
+    # assert False
     my_trainer = Trainer(
         model=model,
         device=device,
@@ -225,7 +230,7 @@ if __name__ == "__main__":
         num_warmup_steps=1000,
         num_training_steps=100000,
         valid_every=30,
-        best_val_ckpt_path="my_model.pt",
+        best_val_ckpt_path="checkpoint/my_model.pt",
     )
     #my_trainer.load_training_state()
     my_trainer.fit()

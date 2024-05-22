@@ -16,21 +16,21 @@ from typing import List
 
 
 class KorDPRRetriever:
-    def __init__(self, model, valid_dataset, index, val_batch_size: int = 64, device='cuda:1'):
+    def __init__(self, model, valid_dataset, index, val_batch_size: int = 64, device='cuda:0'):
         self.model = model.to(device)
         self.device = device
         self.tokenizer = valid_dataset.tokenizer
-        self.val_batch_size = val_batch_size
-        self.valid_loader = torch.utils.data.DataLoader(
-            dataset=valid_dataset.dataset,
-            batch_sampler=KorQuadSampler(
-                valid_dataset.dataset, batch_size=val_batch_size, drop_last=False
-            ),
-            collate_fn=lambda x: korquad_collator(
-                x, padding_value=valid_dataset.pad_token_id
-            ),
-            num_workers=4,
-        )
+        # self.val_batch_size = val_batch_size
+        # self.valid_loader = torch.utils.data.DataLoader(
+        #     dataset=valid_dataset.dataset,
+        #     batch_sampler=KorQuadSampler(
+        #         valid_dataset.dataset, batch_size=val_batch_size, drop_last=False
+        #     ),
+        #     collate_fn=lambda x: korquad_collator(
+        #         x, padding_value=valid_dataset.pad_token_id
+        #     ),
+        #     num_workers=4,
+        # )
         self.index = index
 
     def val_top_k_acc(self, k:List[int]=[5] + list(range(10,101,10))):
@@ -64,8 +64,6 @@ class KorDPRRetriever:
                 sample_cnt += bsz
         retr_acc = {_k:float(v) / float(sample_cnt) for _k,v in retr_cnt.items()}
         return retr_acc
-
-
     def retrieve(self, query: str, k: int = 100):
         """주어진 쿼리에 대해 가장 유사도가 높은 passage를 반환합니다."""
         self.model.eval()  # 평가 모드
@@ -75,11 +73,10 @@ class KorDPRRetriever:
         self.model.to("cuda")
 
         # 토큰화된 데이터를 같은 GPU로 이동
-        # tok는 딕셔너리 형태로, 'input_ids'와 'attention_mask' 같은 키를 포함할 수 있습니다.
         tok = {k: v.to("cuda") for k, v in tok.items()}
-        
+
         with torch.no_grad():
-            out = self.model(T(tok["input_ids"]), T(tok["attention_mask"]), "query")
+            out = self.model(tok["input_ids"], tok["attention_mask"], "query")
         result = self.index.search_knn(query_vectors=out.cpu().numpy(), top_docs=k)
 
         # 원문 가져오기
@@ -91,9 +88,41 @@ class KorDPRRetriever:
                 continue
             with open(path, "rb") as f:
                 passage_dict = pickle.load(f)
-            print(f"passage : {passage_dict[idx]}, sim : {sim}")
-            passages.append((passage_dict[idx], sim))
-        return passages
+            passages.append(f"passage: {passage_dict[idx]}, sim: {sim}")
+
+        # passage들을 하나의 긴 문자열로 연결하여 반환
+        return " ".join(passages)
+
+# TODO: 예전 리트리브 메소드이다. 이건............ 나중에 customize할때 다시 사용하자. 나중에 be파트랑 endpoint format회의할때 생각
+#     def retrieve(self, query: str, k: int = 100):
+#         """주어진 쿼리에 대해 가장 유사도가 높은 passage를 반환합니다."""
+#         self.model.eval()  # 평가 모드
+#         tok = self.tokenizer.batch_encode_plus([query], return_tensors='pt')
+
+#         # 모델을 GPU로 이동
+#         self.model.to("cuda")
+
+#         # 토큰화된 데이터를 같은 GPU로 이동
+#         # tok는 딕셔너리 형태로, 'input_ids'와 'attention_mask' 같은 키를 포함할 수 있습니다.
+#         tok = {k: v.to("cuda") for k, v in tok.items()}
+        
+#         with torch.no_grad():
+#             out = self.model(T(tok["input_ids"]), T(tok["attention_mask"]), "query")
+#         result = self.index.search_knn(query_vectors=out.cpu().numpy(), top_docs=k)
+
+#         # 원문 가져오기
+#         passages = []
+#         for idx, sim in zip(*result[0]):
+#             path = get_passage_file([idx])
+#             if not path:
+#                 print(f"No single passage path for {idx}")
+#                 continue
+#             with open(path, "rb") as f:
+#                 passage_dict = pickle.load(f)
+#             print(f"passage : {passage_dict[idx]}, sim : {sim}")
+#             passages.append((passage_dict[idx], sim))
+#         return passages
+
 
 
 if __name__ == "__main__":

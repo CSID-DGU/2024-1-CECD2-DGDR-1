@@ -8,3 +8,7 @@ processed_passages/
 src/
 text/
 title_passage_map.p
+dpr_sagemaker/model.tar.gz
+sagemaker/model/
+sagemaker/model.tar.gz
+
