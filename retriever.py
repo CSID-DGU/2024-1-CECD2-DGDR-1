@@ -80,7 +80,8 @@ class KorDPRRetriever:
         result = self.index.search_knn(query_vectors=out.cpu().numpy(), top_docs=k)
 
         # 원문 가져오기
-        passages = []
+        passages = dict()
+        numbering = 0
         for idx, sim in zip(*result[0]):
             path = get_passage_file([idx])
             if not path:
@@ -88,10 +89,13 @@ class KorDPRRetriever:
                 continue
             with open(path, "rb") as f:
                 passage_dict = pickle.load(f)
-            passages.append(f"passage: {passage_dict[idx]}, sim: {sim}")
+            passages[f"passage{numbering}"]=passage_dict[idx][6:-5]
+            passages[f"sim{numbering}"]=float(sim)
+            numbering += 1
+            #passages.append(f"passage: ||{passage_dict[idx]}||, sim: ||{sim}||")
 
         # passage들을 하나의 긴 문자열로 연결하여 반환
-        return " ".join(passages)
+        return passages
 
 # TODO: 예전 리트리브 메소드이다. 이건............ 나중에 customize할때 다시 사용하자. 나중에 be파트랑 endpoint format회의할때 생각
 #     def retrieve(self, query: str, k: int = 100):

@@ -70,7 +70,7 @@ def predict_fn(input_data, model_data):
     #     outputs = model.generate(inputs, max_length=50)
     # return tokenizer.decode(outputs[0], skip_special_tokens=True)
     k=3 # TODO: BE랑 얘기하기.
-    query = "일 일 일 일 일 일" #TODO: QUERY 입력받기
+    # query = input_data
     try:
         # subprocess를 사용하여 retriever.py 스크립트를 실행하고 결과를 캡처합니다.
         # result = subprocess.run(
@@ -82,7 +82,7 @@ def predict_fn(input_data, model_data):
         # # 스크립트의 출력을 반환합니다.
         # return result.stdout
         
-        result=model_data["retriever"].retrieve(query=query, k=k)
+        result=model_data["retriever"].retrieve(query=input_data, k=k)
         # subprocess.run(
         #     ['python', f'{model_data["model_dir"]}/retriever.py', '-q', query, '-k', str(k)],
         #     capture_output=True,
@@ -100,6 +100,6 @@ def output_fn(prediction, content_type):
     출력 데이터를 클라이언트에 반환할 형식으로 변환합니다.
     """
     if content_type == "application/json":
-        return json.dumps({'generated_text': prediction})
+        return json.dumps(prediction)
     else:
         raise ValueError(f"Unsupported content type: {content_type}")
