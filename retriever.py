@@ -140,7 +140,7 @@ if __name__ == "__main__":
     model.eval()
     valid_dataset = KorQuadDataset("dataset/KorQuAD_v1.0_dev.json")
     index = DenseFlatIndexer()
-    index.deserialize(path="2050iter_flat")
+    index.deserialize(path="2050iter_flat") ### here is for inference index....
     retriever = KorDPRRetriever(model=model, valid_dataset=valid_dataset, index=index)
     retriever.retrieve(query=args.query, k=args.k)
     #retr_acc = retriever.val_top_k_acc()

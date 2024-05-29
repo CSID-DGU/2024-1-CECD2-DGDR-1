@@ -160,7 +160,8 @@ class IndexRunner:
 
 if __name__ == "__main__":
     IndexRunner(
-        data_dir="text",
+        #data_dir="text",
+        data_dir="inference_text",
         model_ckpt_path="checkpoint/my_model.pt",
         index_output="2050iter_flat",
     ).run()

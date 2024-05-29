@@ -8,6 +8,7 @@ def read_and_process_text_file(file_path):
             stripped_line = line.strip()
             if stripped_line:  # 비어있지 않은 줄만 리스트에 추가
                 lines.append(stripped_line)
+    
     return lines
 
 # JSON 파일로 저장
@@ -29,8 +30,12 @@ if __name__ == "__main__":
 
     # 파일 처리
     processed_lines = read_and_process_text_file(input_text_path)
+    print("text lines len is....")
+    print(len(processed_lines))
     save_to_json(processed_lines, output_json_path)
 
     # 저장된 JSON 파일 읽기 및 출력
     loaded_text = read_json_file(output_json_path)
+    print("and text examples...")
     print(loaded_text[:10])
+    

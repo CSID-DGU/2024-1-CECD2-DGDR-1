@@ -7,3 +7,8 @@ Version: 1.11.0+cu113
 
 
 index runner는 wiki_00에서 </doc>으로 passage 잘 분리시키기만 하면 된다.
+
+
+훈련 doc은 chunk_data.py는 text/에서 가져오고 trainer(->dpr_data.py)의 korquaddataset은 processed_passages에서 가져온다. query는 dataset/question.json
+
+추론 doc은 indexer_runner.py 는 text/에서 가져오고 retriever은 앞서 만든 2050iter_flat에서 가져온다.
