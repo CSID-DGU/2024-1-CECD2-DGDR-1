@@ -11,7 +11,7 @@ from tqdm import tqdm
 from indexers import DenseFlatIndexer
 from encoder import KobertBiEncoder
 from dpr_data import KorQuadDataset, KorQuadSampler, korquad_collator
-from utils import get_passage_file
+from utils import get_passage_file, get_inference_passage_file
 from typing import List
 
 
@@ -83,7 +83,10 @@ class KorDPRRetriever:
         passages = dict()
         numbering = 0
         for idx, sim in zip(*result[0]):
-            path = get_passage_file([idx])
+            path = get_inference_passage_file([idx])
+            #path = get_passage_file([idx])
+            # print(path)
+            # assert False
             if not path:
                 print(f"No single passage path for {idx}")
                 continue
@@ -95,6 +98,7 @@ class KorDPRRetriever:
             #passages.append(f"passage: ||{passage_dict[idx]}||, sim: ||{sim}||")
 
         # passage들을 하나의 긴 문자열로 연결하여 반환
+        print(passages)
         return passages
 
 # TODO: 예전 리트리브 메소드이다. 이건............ 나중에 customize할때 다시 사용하자. 나중에 be파트랑 endpoint format회의할때 생각

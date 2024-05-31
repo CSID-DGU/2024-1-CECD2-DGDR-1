@@ -59,6 +59,9 @@ class Trainer:
             ),
             num_workers=4,
         )
+        # for i in self.train_loader:
+        #     print(i)
+        # assert False
         self.valid_loader = torch.utils.data.DataLoader(
             dataset=valid_dataset.dataset,
             batch_sampler=KorQuadSampler(
@@ -223,13 +226,14 @@ if __name__ == "__main__":
         device=device,
         train_dataset=train_dataset,
         valid_dataset=valid_dataset,
-        num_epoch=40,
-        batch_size=128 - 32,
+        num_epoch=400,
+        #batch_size=128 - 32,
+        batch_size=512,
         lr=1e-5,
         betas=(0.9, 0.99),
         num_warmup_steps=1000,
         num_training_steps=100000,
-        valid_every=30,
+        valid_every=300,
         best_val_ckpt_path="checkpoint/my_model.pt",
     )
     #my_trainer.load_training_state()

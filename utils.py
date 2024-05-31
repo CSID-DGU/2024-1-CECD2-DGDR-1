@@ -40,13 +40,28 @@ def get_passage_file(p_id_list: typing.List[int]) -> str:
     return target_file
 
 def get_passage_file_dawon():
+    print("here is dangerous!!!"*20)
     """passage id를 받아서 해당되는 파일 이름을 반환합니다."""
 #     target_file = None
 #     p_id_max = max(p_id_list)
 #     p_id_min = min(p_id_list)
-    for f in glob("processed_passages/*.p"):
+    for f in glob("processed_passages/*.p"): 
         s, e = f.split("/")[1].split(".")[0].split("-")
         s, e = int(s), int(e)
 #         if p_id_min >= s and p_id_max <= e:
         target_file = f
         return target_file,e
+
+    
+    
+def get_inference_passage_file(p_id_list: typing.List[int]) -> str:
+    """passage id를 받아서 해당되는 파일 이름을 반환합니다."""
+    target_file = None
+    p_id_max = max(p_id_list)
+    p_id_min = min(p_id_list)
+    for f in glob("inference_processed_passages/*.p"):
+        s, e = f.split("/")[1].split(".")[0].split("-")
+        s, e = int(s), int(e)
+        if p_id_min >= s and p_id_max <= e:
+            target_file = f
+    return target_file

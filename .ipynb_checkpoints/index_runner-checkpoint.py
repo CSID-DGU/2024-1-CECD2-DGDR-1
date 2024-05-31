@@ -116,10 +116,10 @@ class IndexRunner:
         ds = torch.utils.data.ChainDataset(
             tuple(WikiArticleStream(path, chunker) for path in wiki_files)
         )
-#         for i in ds:
-#             #print(i)
-#             pass
-#         assert False
+        # for i in ds:
+        #     print(chunker.tokenizer.decode(i))
+        #     #pass
+        # assert False
         
         loader = torch.utils.data.DataLoader(
             ds,
