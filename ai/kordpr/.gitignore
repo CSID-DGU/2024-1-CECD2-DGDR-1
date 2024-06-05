@@ -1,0 +1,13 @@
+2050iter_flat/
+bigdata/
+checkpoint/
+index/
+logs/
+processed_passages/
+src/
+title_passage_map.p
+dpr_sagemaker/model.tar.gz
+sagemaker/model/
+sagemaker/model.tar.gz
+text/
+inference_text/
