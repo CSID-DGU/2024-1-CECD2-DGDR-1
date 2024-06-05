@@ -111,7 +111,6 @@ class KorQuadDataset:
             self._match_passage()
             logger.debug("successfully loaded data_tuples into self.data_tuples")
             # tokenizing raw dataset
-            print(self.data_tuples)
             self.tokenized_tuples = [
                 (self.tokenizer.encode(q), id, self.tokenizer.encode(p))
                 for q, id, p in tqdm(self.data_tuples, desc="tokenize")
@@ -142,6 +141,7 @@ class KorQuadDataset:
         """미리 구축한 ko-wiki 데이터와 korQuad의 answer를 매칭하여 (query, passage_id, passage)의 tuple을 구성합니다.""" 
         
         target_file_p,num_of_passages = get_passage_file_dawon() ## processed_passages의 파일명 0-10 일때 그 사이 숫자 넣어야함.
+        
         cand_ids = [i for i in range(num_of_passages+1)] ###### 이거 주의해서 넣을것. 0부터 10까지니까 RANGE 11로 하는게 마따.
 #         for i in range(200):
 #             self.data_tuples.extend(
@@ -183,7 +183,6 @@ class KorQuadDataset:
             self.data_tuples.extend(
                 [(question_list[idx], idx, contexts[idx])]
             )
-            print((question_list[idx], idx, contexts[idx]))
             
         
 

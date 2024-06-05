@@ -212,6 +212,14 @@ class Trainer:
 
 
 if __name__ == "__main__":
+    file_path = "dataset/KorQuAD_v1.0_dev_processed.p"
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        print(f"{file_path} 파일이 삭제되었습니다.")
+    else:
+        print(f"{file_path} 파일이 존재하지 않습니다.")
+    
+    
     device = torch.device("cuda:0")
     model = KobertBiEncoder()
     # train_dataset = KorQuadDataset("dataset/KorQuAD_v1.0_train.json")
@@ -221,19 +229,20 @@ if __name__ == "__main__":
     # for i in train_dataset.dataset:
     #     print(i)
     # assert False
+    
     my_trainer = Trainer(
         model=model,
         device=device,
         train_dataset=train_dataset,
         valid_dataset=valid_dataset,
-        num_epoch=400,
+        num_epoch=5,
         #batch_size=128 - 32,
-        batch_size=512,
+        batch_size=8,
         lr=1e-5,
         betas=(0.9, 0.99),
         num_warmup_steps=1000,
         num_training_steps=100000,
-        valid_every=300,
+        valid_every=3,
         best_val_ckpt_path="checkpoint/my_model.pt",
     )
     #my_trainer.load_training_state()

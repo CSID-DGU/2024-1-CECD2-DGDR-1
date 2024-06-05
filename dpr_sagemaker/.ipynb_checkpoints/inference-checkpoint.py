@@ -69,7 +69,7 @@ def predict_fn(input_data, model_data):
     # with torch.no_grad():
     #     outputs = model.generate(inputs, max_length=50)
     # return tokenizer.decode(outputs[0], skip_special_tokens=True)
-    k=3 # TODO: BE랑 얘기하기.
+    k=6 # TODO: BE랑 얘기하기.
     # query = input_data
     try:
         # subprocess를 사용하여 retriever.py 스크립트를 실행하고 결과를 캡처합니다.

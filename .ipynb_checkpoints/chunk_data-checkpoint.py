@@ -83,7 +83,9 @@ class DataChunk:
 #                 logger.debug(f"title {title} has <5 subwords in its article, passing")
 #                 continue
             chunk = self.tokenizer.encode(art)
+            
             orig_text.append(self.tokenizer.decode(chunk))
+            
             chunk_list.append(chunk)
 
             # article마다 chunk_size 길이의 chunk를 만들어 list에 append. 각 chunk에는 title을 prepend합니다.
