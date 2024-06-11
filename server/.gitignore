@@ -37,8 +37,8 @@ out/
 .vscode/
 
 # Add these lines to ignore specific files
-resources/private.key
-resources/application.properties
+**/resources/private.key
+**/application.properties
 **/Constants.java
-audio/
+**/audio/
 
