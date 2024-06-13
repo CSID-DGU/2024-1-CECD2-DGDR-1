@@ -39,10 +39,12 @@ public class WebSocketHandler extends BinaryWebSocketHandler {
     private final ConcurrentMap<String, LocalDateTime> sessionStartTimeMap = new ConcurrentHashMap<>();
 
     private final ConversationRepository conversationRepository;
+    private final WebClient webClient;
 
     @Autowired
     public WebSocketHandler(ConversationRepository conversationRepository) {
         this.conversationRepository = conversationRepository;
+        this.webClient = WebClient.builder().baseUrl("http://localhost:3000").build();
         scheduler.scheduleAtFixedRate(this::saveAndSendAudioToFile, 10, 10, TimeUnit.SECONDS);
     }
 
@@ -120,7 +122,9 @@ public class WebSocketHandler extends BinaryWebSocketHandler {
                         if (audioFile.exists() && audioFile.length() > 0) {
                             convertSpeechToText(audioFile.getAbsolutePath(), session).subscribe(result -> {
                                 System.out.println("Transcription result: \n" + result);
+
                                 saveConversation(session, (String) result);
+
                                 audioFile.delete();
                                 String callerId = getCallerIdFromSession(session);
                                 createNewAudioFile(session.getId(), callerId);
@@ -287,9 +291,26 @@ public class WebSocketHandler extends BinaryWebSocketHandler {
 
     private void saveConversation(WebSocketSession session, String transcription) {
         Conversation conversation = new Conversation();
-        conversation.setStartTime(sessionStartTimeMap.get(session.getId()));
+        conversation.setStartTime(LocalDateTime.now());
         conversation.setCallerId(getCallerIdFromSession(session));
         conversation.setTranscription(transcription);
         conversationRepository.save(conversation);
+    }
+
+
+    private void sendConversationToServer(Conversation conversation) {
+        webClient.post()
+                .uri("https://f238-210-94-220-228.ngrok-free.app/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(conversation)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .doOnSuccess(response -> {
+                    System.out.println("Conversation successfully sent to server.");
+                })
+                .doOnError(error -> {
+                    System.err.println("Error sending conversation to server: " + error.getMessage());
+                })
+                .subscribe();
     }
 }
