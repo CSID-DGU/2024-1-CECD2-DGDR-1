@@ -1,4 +1,4 @@
-package dgdr.server;
+package dgdr.server.vonage;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

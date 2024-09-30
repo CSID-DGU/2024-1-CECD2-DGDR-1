@@ -1,7 +1,8 @@
-package dgdr.server;
+package dgdr.server.vonage;
 
 import com.vonage.client.VonageClient;
 import com.vonage.client.voice.ncco.ConnectAction;
+import com.vonage.client.voice.ncco.EventType;
 import com.vonage.client.voice.ncco.Ncco;
 import com.vonage.client.voice.ncco.WebSocketEndpoint;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +28,7 @@ public class VonageService {
         String websocketUri = String.format("wss://" + Constants.URL + "/ws/audio?caller-id=%s", callerId);
 
         WebSocketEndpoint websocketEndpoint = WebSocketEndpoint
-                .builder(websocketUri, "audio/l16;rate=8000")
+                .builder(websocketUri, "audio/l16;rate=16000")
                 .build();
 
         ConnectAction connectAction = ConnectAction.builder()
