@@ -1,0 +1,29 @@
+docker pull nvcr.io/nvidia/pytorch:21.11-py3
+docker run -it --gpus all --name my_pytorch_container nvcr.io/nvidia/pytorch:21.11-py3 /bin/bash
+#docker attach my_pytorch_container
+
+cd /workspace
+git clone https://github.com/TmaxEdu/KorDPR.git
+cd KorDPR
+conda env create --file environment.yml
+
+docker commit my_pytorch_container my_pytorch_custom:latest
+
+
+
+aws sts get-caller-identity
+
+
+aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 471112711710.dkr.ecr.ap-northeast-2.amazonaws.com
+docker tag my_pytorch_custom:latest 471112711710.dkr.ecr.ap-northeast-2.amazonaws.com/my_pytorch_repository:latest
+docker push 471112711710.dkr.ecr.ap-northeast-2.amazonaws.com/my_pytorch_repository:latest
+
+
+from sagemaker.huggingface import HuggingFaceModel
+
+huggingface_model = HuggingFaceModel(
+    model_data='s3://{bucket_name}/gitfilesandmodeltorchbinandpythonfiles.tar.gz',
+    role='{IAM_role}',
+    entry_point='inference.py',
+    image_uri='your_account_id.dkr.ecr.your_region.amazonaws.com/my_pytorch_repository:latest'
+)
