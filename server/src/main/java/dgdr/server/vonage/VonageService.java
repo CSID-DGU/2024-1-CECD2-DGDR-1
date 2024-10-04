@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class VonageService {
-    /*private final VonageClient vonageClient;
+    private final VonageClient vonageClient;
 
     public VonageService(@Value("${vonage.apiKey}") String apiKey,
                          @Value("${vonage.applicationId}") String applicationId,
@@ -22,7 +22,7 @@ public class VonageService {
                 .apiSecret(apiSecret)
                 .privateKeyPath(privateKeyPath)
                 .build();
-    }*/
+    }
 
     public Ncco createConversationNcco(String callerId) {
         String websocketUri = String.format("wss://" + Constants.URL + "/ws/audio?caller-id=%s", callerId);
