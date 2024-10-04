@@ -15,7 +15,7 @@ import java.util.Date;
 @Slf4j
 @Component
 public class TokenProvider {
-    @Value("${jwt.secret:s2i3g4n5a6l7s8e9c0r3e2t1x3123}")
+    @Value("${jwt.secret:s2i3g4n5a6l7s8e9c0r3e2t1xs12881sllsd888xcvu9z821lk4dxc88z8ds3123}")
     private String secret;
 
     @Value("${jwt.accessToken.expiration:3600}")

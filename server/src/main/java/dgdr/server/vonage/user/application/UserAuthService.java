@@ -31,6 +31,10 @@ public class UserAuthService {
 
         User user = userRepository.findById(loginReq.id())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        // login password 확인
+        if (!user.getPassword().equals(loginReq.password())) {
+            throw new IllegalArgumentException("Password not matched");
+        }
 
         return TokenResponse.builder()
                 .accessToken(tokenProvider.createAccessToken(user.getUserId()))
