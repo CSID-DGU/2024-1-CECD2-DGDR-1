@@ -1,4 +1,4 @@
-package dgdr.server;
+package dgdr.server.vonage;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,5 +25,9 @@ public class TranscriptService {
                         "startTime", conversation.getStartTime().toString()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    public void clearAllConversation() {
+        conversationRepository.deleteAll();
     }
 }

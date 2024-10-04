@@ -1,4 +1,4 @@
-package dgdr.server;
+package dgdr.server.vonage;
 
 import com.vonage.client.voice.ncco.Ncco;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class VonageController {
 
     @PostMapping("/event")
     public void eventWebhook(@RequestBody String payload) {
-        System.out.println("Event: " + payload);
+//        System.out.println("Event: " + payload);
     }
 
     @GetMapping("/manual")
@@ -36,5 +36,11 @@ public class VonageController {
     public ResponseEntity<List<Map<String, String>>> getAllConversations() {
         List<Map<String, String>> allConversations = transcriptService.getAllConversations();
         return ResponseEntity.ok(allConversations);
+    }
+
+    @PostMapping("/transcript/clear")
+    public ResponseEntity<Void> clearAllConversations() {
+        transcriptService.clearAllConversation();
+        return ResponseEntity.ok().build();
     }
 }

@@ -1,4 +1,4 @@
-package dgdr.server;
+package dgdr.server.vonage;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

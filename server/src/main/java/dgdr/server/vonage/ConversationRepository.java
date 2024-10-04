@@ -1,4 +1,4 @@
-package dgdr.server;
+package dgdr.server.vonage;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
