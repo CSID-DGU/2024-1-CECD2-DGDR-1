@@ -10,6 +10,7 @@ public record UserSignUpReq (
 ){
     public User toNonPermanenEntity() {
         return User.builder()
+                .userId(id)
                 .name(name)
                 .password(password)
                 .phone(phone)
