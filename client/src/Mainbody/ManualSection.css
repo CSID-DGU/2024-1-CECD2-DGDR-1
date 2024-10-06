@@ -1,0 +1,154 @@
+.manual-section {
+    width: 45%;
+    background-color: #f7f7f7;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 10px;
+    height: calc(100vh - 40px);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .manual-content,
+  .manual-placeholder {
+    flex: 1;
+    max-height: 1000px;
+    overflow-y: auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    position: relative;
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 15px; /* 상단에서 15px 아래에 위치 */
+    right: 15px; /* 우측에서 15px 떨어져 위치 */
+    background-color: #ff6f61;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 1em; /* 버튼 폰트 크기 증가 */
+    cursor: pointer;
+    color: white;
+  }
+  
+  .close-button:hover {
+    background-color: #e55a50;
+  }
+  
+  .manual-content p,
+  .manual-placeholder p {
+    margin: 0;
+    line-height: 2.2;
+  }
+  
+  .manual-placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #888;
+    font-size: 1.2em;
+  }
+  
+  .manual-keywords {
+    font-size: 1.3em;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .buttons {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .buttons button:first-child {
+    background-color: #007bff;
+  }
+  
+  .buttons button:last-child {
+    background-color: #dc3545;
+  }
+  
+  .buttons button:last-child i {
+    margin-left: 5px;
+  }
+  
+  .cards {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .card {
+    background-color: #e0e0ff;
+    padding: 15px;
+    border-radius: 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 30%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .card.selected {
+    background-color: #b0c4ff;
+  }
+  
+  .card h3 {
+    margin-bottom: 10px;
+  }
+  
+  .card-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .card-buttons button {
+    background-color: transparent;
+    border: none;
+    color: #555;
+    cursor: pointer;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .card-buttons button:hover {
+    color: #007bff;
+  }
+  
+  .saved-manuals {
+    margin-top: 20px;
+  }
+  
+  .saved-manual-item {
+    background-color: #f0f8ff;
+    color: #007bff;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  

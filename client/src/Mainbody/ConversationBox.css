@@ -1,0 +1,58 @@
+.conversation-box-container {
+    width: 25%;
+    margin: 20px; /* 페이지에서 떨어지도록 마진 추가 */
+    background-color: #f7f7f7;
+    padding: 20px;
+    border-radius: 10px;
+    height: 100%; /* 전체 높이 */
+    max-height: 80vh; /* 최대 높이를 80%로 제한 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .conversation-box-container h3 {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .conversation-box {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto; /* 스크롤 바 추가 */
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* 메시지 박스 간의 간격 */
+  }
+  
+  .message {
+    padding: 10px 15px;
+    border-radius: 10px;
+    max-width: 70%;
+    word-wrap: break-word;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    position: relative;
+    background-color: #d0e0ff; /* 기본 메시지 배경색 */
+  }
+  
+  .message:last-child {
+    background-color: #d4edda; /* 마지막 메시지를 초록색으로 표시 */
+  }
+  
+  .patient {
+    align-self: flex-start;
+  }
+  
+  .agent {
+    align-self: flex-end;
+  }
+  
+  .message .time {
+    font-size: 0.8em;
+    color: #888;
+    margin-top: 5px;
+    align-self: flex-end; /* 시간을 오른쪽 정렬 */
+  }
+  
