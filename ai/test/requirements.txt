@@ -3,3 +3,4 @@ numpy
 scikit-learn
 requests
 aws-requests-auth
+rank-bm25
