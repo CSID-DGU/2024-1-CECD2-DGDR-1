@@ -25,13 +25,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
-            .cors(Customizer.withDefaults())
-            .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(jwtTokenAuthFilter, UsernamePasswordAuthenticationFilter.class)
-            .headers(headerConfig ->
-                headerConfig.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
-            );
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
+                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorize ->
+                        authorize
+                                .requestMatchers("/api/v1/user/auth/**").permitAll() // '/api/v1/user/auth' 하위 경로 허용
+                                .anyRequest().authenticated() // 다른 모든 요청은 인증 필요
+                )
+                .addFilterBefore(jwtTokenAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .headers(headerConfig ->
+                        headerConfig.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
+                );
         return http.build();
     }
 }
