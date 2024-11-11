@@ -30,7 +30,7 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers("/api/v1/user/auth/**").permitAll() // '/api/v1/user/auth' 하위 경로 허용
+                                .requestMatchers("/api/v1/user/auth/**", "/ws/*").permitAll() // '/api/v1/user/auth' 하위 경로 허용
                                 .anyRequest().authenticated() // 다른 모든 요청은 인증 필요
                 )
                 .addFilterBefore(jwtTokenAuthFilter, UsernamePasswordAuthenticationFilter.class)
