@@ -13,34 +13,21 @@ import java.util.Map;
 public class VonageController {
     private final VonageService vonageService;
     private final ManualService manualService;
-    private final TranscriptService transcriptService;
 
     @PostMapping("/answer")
     public Ncco answerWebhook(@RequestBody AnswerWebhookPayload payload) {
         String from = payload.getFrom();
-        return vonageService.createConversationNcco(from);
+        return vonageService.createOrJoinConversationWithWebSocket(from);
     }
 
     @PostMapping("/event")
     public void eventWebhook(@RequestBody String payload) {
-//        System.out.println("Event: " + payload);
+        System.out.println("Event: " + payload);
     }
 
-    @GetMapping("/manual")
-    public ResponseEntity<Map<String, Object>> sendManual() {
-        Map<String, Object> response = manualService.getManual();
+    @GetMapping("/manual/{callId}")
+    public ResponseEntity<Map<String, Object>> sendManual(@PathVariable Long callId) {
+        Map<String, Object> response = manualService.getManual(callId);
         return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/transcript")
-    public ResponseEntity<List<Map<String, String>>> getAllConversations() {
-        List<Map<String, String>> allConversations = transcriptService.getAllConversations();
-        return ResponseEntity.ok(allConversations);
-    }
-
-    @PostMapping("/transcript/clear")
-    public ResponseEntity<Void> clearAllConversations() {
-        transcriptService.clearAllConversation();
-        return ResponseEntity.ok().build();
     }
 }

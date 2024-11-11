@@ -1,6 +1,5 @@
 package dgdr.server.vonage.user.domain;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,5 +18,4 @@ public class User {
     private String password;
 
     private String phone;
-
 }

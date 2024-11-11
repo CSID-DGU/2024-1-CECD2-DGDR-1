@@ -22,10 +22,10 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ManualService {
-    private final ConversationRepository conversationRepository;
+    private final CallService callService;
 
-    public Map<String, Object> getManual() {
-        List<Conversation> conversations = conversationRepository.findAll();
+    public Map<String, Object> getManual(Long callId) {
+        List<CallRecordDto> conversations = callService.getCallRecord(callId);
         String formattedTranscript = formatConversations(conversations);
 
         AwsBasicCredentials awsCreds = AwsBasicCredentials.create(Constants.AWS_ACCESS_KEY, Constants.AWS_SECRET_KEY);
@@ -61,13 +61,13 @@ public class ManualService {
         return result;
     }
 
-    private String formatConversations(List<Conversation> conversations) {
-        return conversations.stream()
-                .map(conversation -> {
-                    if (conversation.getCallerId().equals(Constants.PHONE)) {
-                        return "상황실: " + conversation.getTranscription();
+    private String formatConversations(List<CallRecordDto> callRecordDtos) {
+        return callRecordDtos.stream()
+                .map(callRecord -> {
+                    if (callRecord.getSpeakerPhoneNumber().equals(Constants.PHONE)) {
+                        return "상황실: " + callRecord.getTranscription();
                     } else {
-                        return "신고자: " + conversation.getTranscription();
+                        return "신고자: " + callRecord.getTranscription();
                     }
                 })
                 .collect(Collectors.joining("\\n"));
@@ -79,17 +79,18 @@ public class ManualService {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode rootNode = objectMapper.readTree(responseBody);
 
-            // 각 passage를 순회하면서 "병명"과 "임상적 특징" 추출
+            // 각 passage를 순회하면서 "passage", "임상적 특징", "환자평가 필수항목" 추출
             for (int i = 0; i <= 5; i++) {
-                String passageKey0 = "passage" + i + "_0"; // 병명
-                String passageKey2 = "passage" + i + "_2"; // 임상적 특징
-                String simKey = "sim" + i;
+                String passageKey = "passage" + i;  // passage key
+                String scriptKey = "script" + i;    // script key
+                String simKey = "sim" + i;          // 유사도 key
 
-                if (rootNode.has(passageKey0) && rootNode.has(passageKey2) && rootNode.has(simKey)) {
+                if (rootNode.has(passageKey) && rootNode.has(scriptKey) && rootNode.has(simKey)) {
                     Map<String, Object> formattedMap = new HashMap<>();
-                    formattedMap.put("병명", rootNode.get(passageKey0).asText());
-                    formattedMap.put("환자평가 필수항목", rootNode.get(passageKey2).asText());
-                    formattedMap.put("유사도", rootNode.get(simKey).asDouble());
+                    formattedMap.put("병명", rootNode.get(passageKey).asText());  // passage 저장
+                    formattedMap.put("임상적 특징", rootNode.get(scriptKey).get("임상적 특징").asText());  // 임상적 특징 저장
+                    formattedMap.put("환자평가 필수항목", rootNode.get(scriptKey).get("환자평가 필수항목").asText());  // 환자평가 필수항목 저장
+                    formattedMap.put("유사도", rootNode.get(simKey).asDouble());  // 유사도 저장
 
                     responseMap.put("passage" + i, formattedMap);
                 }
@@ -99,6 +100,7 @@ public class ManualService {
         }
         return responseMap;
     }
+
 
 
     private void saveResponseToJsonFile(Map<String, Object> data, String filename) {
