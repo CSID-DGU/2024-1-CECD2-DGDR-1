@@ -24,5 +24,4 @@ public class User {
     private String phone;
     @OneToMany(mappedBy = "user")
     private List<CallRecord> callRecords;
-
 }

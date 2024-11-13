@@ -35,6 +35,8 @@ dependencies {
     implementation 'org.apache.commons:commons-text:1.11.0'
 
     implementation 'com.vonage:server-sdk:8.7.0'
+    implementation 'com.vonage:jwt:2.0.0'
+
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation group: 'com.microsoft.cognitiveservices.speech', name: 'client-sdk', version: "1.37.0", ext: "jar"
