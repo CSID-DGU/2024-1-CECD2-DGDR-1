@@ -1,11 +1,9 @@
 package dgdr.server.vonage.record.domain;
 
-import dgdr.server.vonage.user.domain.User;
+import dgdr.server.vonage.call.domain.Call;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,13 +11,14 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "records")
-public class Record {
+@Table(name = "callRecords")
+public class CallRecord {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "call_id")
+    private Call call;
+    private String userId;
     private String speakerPhoneNumber;
     private String transcription;
     private LocalDateTime createdAt;

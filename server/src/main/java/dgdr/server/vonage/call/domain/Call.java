@@ -1,6 +1,6 @@
 package dgdr.server.vonage.call.domain;
 
-import dgdr.server.vonage.record.domain.Record;
+import dgdr.server.vonage.record.domain.CallRecord;
 import dgdr.server.vonage.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,6 +27,6 @@ public class Call {
     private User user;
 
     @OneToMany(mappedBy = "call")
-    private List<Record> record;
+    private List<CallRecord> callRecords;
 
 }
