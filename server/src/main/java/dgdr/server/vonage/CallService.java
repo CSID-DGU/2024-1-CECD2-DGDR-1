@@ -15,8 +15,8 @@ public class CallService {
     private final CallRepository callRepository;
     private final CallRecordRepository callRecordRepository;
 
-    public List<CallDto> getCallList() {
-        return callRepository.findAll()
+    public List<CallDto> getCallList(String userId) {
+        return callRepository.findAllByUserId(userId)
                 .stream()
                 .map(call -> CallDto.builder()
                         .id(call.getId())
@@ -25,11 +25,11 @@ public class CallService {
                         .build())
                 .collect(Collectors.toList());
     }
-    public List<CallDto> getCallListByDateRange(LocalDate startDate, LocalDate endDate) {
+    public List<CallDto> getCallListByDateRange(String userId, LocalDate startDate, LocalDate endDate) {
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
 
-        return callRepository.findAllByStartTimeBetween(startDateTime, endDateTime)
+        return callRepository.findAllByStartTimeBetween(userId, startDateTime, endDateTime)
                 .stream()
                 .map(call -> CallDto.builder()
                         .id(call.getId())
@@ -39,8 +39,8 @@ public class CallService {
                 .collect(Collectors.toList());
     }
 
-    public List<CallRecordDto> getLatestCall() {
-        Call latestCall = callRepository.findFirstByOrderByStartTimeDesc();
+    public List<CallRecordDto> getLatestCall(String userId) {
+        Call latestCall = callRepository.findFirstByOrderByStartTimeDesc(userId);
         return callRecordRepository.findByCallId(latestCall.getId())
                 .stream()
                 .map(callRecord -> CallRecordDto.builder()
