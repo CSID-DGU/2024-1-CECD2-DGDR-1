@@ -1,7 +1,7 @@
 package dgdr.server.vonage.user.domain;
 
 
-import dgdr.server.vonage.record.domain.CallRecord;
+import dgdr.server.vonage.Call;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,5 +23,5 @@ public class User {
 
     private String phone;
     @OneToMany(mappedBy = "user")
-    private List<CallRecord> callRecords;
+    private List<Call> calls;
 }
