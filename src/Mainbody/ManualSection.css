@@ -11,9 +11,12 @@
   justify-content: space-between;
   gap: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-left: 20px;
+  margin-right: 20px; /* 오른쪽에 간격 추가 */
 }
 
 .manual-section-header {
+  font-size: 1.6em;
   display: flex;
   justify-content: space-between; /* 제목과 버튼을 좌우로 배치 */
   align-items: center; /* 제목과 버튼의 세로 정렬을 맞춤 */
@@ -22,12 +25,12 @@
 }
 
 .manual-title {
-  font-size: 30px; /* 폰트 크기를 조정 */
+  font-size: 1.3em; /* 폰트 크기를 조정 */
   text-align: center; /* 텍스트 중앙 정렬 */
   margin-top: 15px;
   margin-bottom: 15px; /* 하단 여백 추가 */
   color: #333; /* 글씨 색상 */
-  font-weight: 500; /* 글씨 두께 설정 */
+  font-weight: 1000; /* 글씨 두께 설정 */
 }
 
 .manual-content,
@@ -43,17 +46,21 @@
 }
 
 .manual-content h4 {
-  margin-top: 20px; /* 제목 위에 충분한 여백을 추가 */
-  font-size: 1.5em; /* 제목 크기를 약간 키움 */
+  margin-top: 30px; /* 제목 위에 충분한 여백을 추가 */
+  margin-bottom: 30px;
+  font-weight: bold;
+  font-size: 1.7em; /* 제목 크기를 약간 키움 */
 }
 
 .manual-content p {
+  font-size: 1.3em;
   line-height: 1.8; /* 텍스트 간 간격 조정 */
   margin-top: 10px; /* 텍스트 간 간격 추가 */
+  color: #333; /* 글씨 색상 */
 }
 
 .manual-content-spacing {
-  margin-top: 50px; /* 임상적 특징과 환자 평가 항목 사이의 여백을 넉넉히 추가 */
+  margin-top: 80px; /* 임상적 특징과 환자 평가 항목 사이의 여백을 넉넉히 추가 */
 }
 
 .close-button2 {
@@ -98,7 +105,8 @@
   height: 150px; /* 고정된 높이를 설정 */
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center; /* 수평 가운데 정렬 */
+  align-items: center;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
   text-align: center;
@@ -113,8 +121,10 @@
 }
 
 .card-title {
-  text-align: left; /* 제목을 좌측 정렬 */
-  font-size: 1.2em; /* 제목의 폰트 크기 */
+  color: #000069;
+  text-align: center; /* 텍스트를 가운데 정렬 */
+  font-weight: 700;
+  font-size: 1.7em; /* 제목의 폰트 크기 */
   margin-bottom: auto; /* 카드 버튼을 하단에 배치하기 위해 제목의 아래 여백 자동으로 설정 */
 }
 

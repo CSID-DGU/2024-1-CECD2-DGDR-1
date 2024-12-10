@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Sidebar.css';
 
 const Sidebar = ({ savedManuals, onSelectManual }) => {
@@ -14,6 +14,22 @@ const Sidebar = ({ savedManuals, onSelectManual }) => {
       protocol.id === id ? { ...protocol, completed: !protocol.completed } : protocol
     ));
   };
+
+  useEffect(() => {
+    const handleKeydown = (e) => {
+      if (e.altKey) {
+        const protocolNumber = parseInt(e.key);
+        if (protocolNumber >= 1 && protocolNumber <= protocols.length) {
+          toggleProtocol(protocolNumber);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeydown);
+    return () => {
+      window.removeEventListener('keydown', handleKeydown);
+    };
+  }, [protocols]);
 
   return (
     <div className="sidebar">

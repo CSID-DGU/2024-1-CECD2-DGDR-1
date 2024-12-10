@@ -1,4 +1,4 @@
-const API_BASE_URL_1 = 'https://d8d0-58-236-188-94.ngrok-free.app';
+const API_BASE_URL_1 = 'https://17e0-58-236-188-94.ngrok-free.app';
 const API_BASE_URL_2 = 'http://whitex.iptime.org:4000';
 
 const getApiBaseUrl = (feature) => {
