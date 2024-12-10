@@ -26,6 +26,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-reactor-netty'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'javazoom:jlayer:1.0.1'
     runtimeOnly 'com.h2database:h2'
@@ -34,6 +35,8 @@ dependencies {
     implementation 'org.apache.commons:commons-text:1.11.0'
 
     implementation 'com.vonage:server-sdk:8.7.0'
+    implementation 'com.vonage:jwt:2.0.0'
+
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation group: 'com.microsoft.cognitiveservices.speech', name: 'client-sdk', version: "1.37.0", ext: "jar"
@@ -41,6 +44,10 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 }
 
 tasks.named('test') {

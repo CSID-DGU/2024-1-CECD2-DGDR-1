@@ -1,0 +1,96 @@
+.conversation-box-container {
+  width: 50vh; /* 너비를 줄임 */
+  margin: 20px auto; /* 가운데 정렬 */
+  background-color: #f7f7f7;
+  padding: 20px;
+  border-radius: 10px;
+  height: 100%;
+  max-height: 97vh;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+}
+
+.conversation-header h3{
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 30px; /* 하단 간격을 늘려 여유 공간 추가 */
+}
+
+.conversation-box {
+  flex: 1;
+  padding: 20px; /* 대화 박스 내 간격을 넓게 설정 */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 25px; /* 메시지 박스 간의 간격을 넓게 설정 */
+  background-color: #e9ecef; /* 대화 박스 배경색 */
+  border-radius: 10px; /* 대화 박스 테두리 둥글게 */
+}
+
+.message-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end; /* 시간을 말풍선 옆에 배치 */
+  margin-bottom: 20px; /* 각 메시지 간의 간격 추가 */
+  gap: 10px; /* 말풍선과 시간 간격을 넓게 설정 */
+}
+
+.agent-container {
+  justify-content: flex-end;
+}
+
+.patient-container{
+  
+}
+
+.message {
+  font-size: 1.3em;
+  display: flex;
+  flex-direction: row-reverse; /* 말풍선 내 시간과 메시지 순서를 변경 */
+  justify-content: space-between;
+  padding: 20px 25px; /* 말풍선 안의 여백을 넓게 설정 */
+  border-radius: 10px; /* 박스 안에 박스 느낌을 주기 위해 둥글게 */
+  max-width: 50%; /* 말풍선 너비 */
+  word-wrap: break-word;
+  background-color: #d0e0ff; /* 기본 말풍선 배경색 */
+  border: 1px solid #ccc; /* 박스 안에 박스 느낌을 주기 위한 테두리 */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 박스의 그림자 */
+}
+
+.patient-container .message {
+  background-color: #f0f0f0;
+}
+
+.agent-container .message {
+  background-color: #d0e0ff;
+}
+
+.latest-message {
+  background-color: #d4edda !important; /* 중요한 스타일로 설정 */
+  border-color: #c3e6cb;
+  color: #155724;
+}
+
+
+.time {
+  font-size: 0.8em;
+  color: #888;
+  white-space: nowrap;
+}
+
+.time-left {
+  text-align: left; /* 시간을 오른쪽으로 맞추기 */
+  
+}
+
+.time-right {
+  text-align: left;
+}
+
+
+button.danger {
+  background-color: #ff6f61;
+  color: white;
+}

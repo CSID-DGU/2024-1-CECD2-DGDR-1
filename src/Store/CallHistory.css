@@ -1,0 +1,137 @@
+/* 두 개의 컨테이너를 분리하고 간격을 추가 */
+.history-detail-wrapper {
+    display: flex;
+    justify-content: center; /* 컨테이너들을 페이지 중앙에 정렬 */
+    align-items: center;
+    gap: 50px; /* 원하는 px로 변경하여 두 컨테이너 사이의 간격 설정 */
+    height: 100vh;
+    padding: 20px;
+    background-color: #f0f0f0;
+}
+
+/* 통화 기록 박스 */
+.call-history-container {
+    width: 1000px; /* 통화 기록의 적절한 너비 설정 */
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    height: 80vh; /* 고정된 높이 */
+    overflow-y: auto; /* 스크롤 */
+}
+
+/* h3 제목과 간격 */
+.call-history-container h3 {
+    margin-bottom: 40px; /* 상하 간격 추가 */
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-top: 1px solid #ddd; /* 상단 border 추가 */
+    border-bottom: 1px solid #ddd; /* 하단 border 추가 */
+}
+
+/* date-picker와 call-list 간의 간격 */
+.date-picker {
+    margin-bottom: 20px; /* date-picker와 call-list 간의 간격을 더 벌림 */
+}
+
+.date-picker input {
+    width: 100%; /* 달력의 너비를 더 크게 */
+    font-size: 1.2em; /* 달력의 폰트 크기를 키움 */
+    padding: 10px; /* 패딩으로 달력의 여백을 늘림 */
+}
+
+/* 통화 리스트 아이템 */
+.call-list-item {
+    cursor: pointer;
+    padding: 10px;
+    margin-top: 15px;
+    margin-bottom: 15px; /* 각 call-list 간의 상하 간격 추가 */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease; /* 색상 전환 효과 추가 */
+}
+
+.call-list-item:hover {
+    background-color: #e9ecef;
+}
+
+/* 선택된 통화 리스트 아이템 */
+.call-list-item.selected {
+    background-color: #d0e0ff; /* 선택된 항목의 배경색 변경 */
+    border: 1px solid #007bff; /* 선택된 항목 테두리 색상 */
+}
+
+/* 통화 세부 내역 박스 */
+.call-details-container {
+    width: 1000px; /* 통화 상세 내용의 적절한 너비 설정 */
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    height: 80vh; /* 고정된 높이 */
+    overflow-y: auto; /* 스크롤 */
+}
+
+/* 대화 스타일 */
+.conversation-box {
+    padding: 20px;
+    height: 1130px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+}
+
+.message-container {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+/* 에이전트 (오른쪽 말풍선) */
+.agent-container {
+    justify-content: flex-end;
+}
+
+.agent-message {
+    background-color: #d0e0ff;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 70%;
+    word-wrap: break-word;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 환자 (왼쪽 말풍선) */
+.patient-container {
+    justify-content: flex-start;
+}
+
+.patient-message {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 70%;
+    word-wrap: break-word;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 시간 표시 */
+.time {
+    font-size: 0.8em;
+    color: #888;
+}
+
+.time-left {
+    margin-right: 10px;
+}
+
+.time-right {
+    margin-left: 10px;
+}
+
+/* 대화가 없는 경우 표시 */
+.call-placeholder {
+    text-align: center;
+    color: #888;
+}

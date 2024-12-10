@@ -2,6 +2,8 @@ package dgdr.server.vonage;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import dgdr.server.vonage.user.domain.User;
+import dgdr.server.vonage.user.infra.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
@@ -10,8 +12,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.BinaryWebSocketHandler;
+import org.springframework.web.socket.handler.ConcurrentWebSocketSessionDecorator;
 import reactor.core.publisher.Mono;
 
 import javax.sound.sampled.*;
@@ -27,16 +31,21 @@ import java.util.concurrent.*;
 
 @Component
 public class WebSocketHandler extends BinaryWebSocketHandler {
-
-    private final ConcurrentMap<String, WebSocketSession> sessionMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, ConcurrentWebSocketSessionDecorator> sessionMap = new ConcurrentHashMap<>();
     private final ConcurrentMap<String, ByteArrayOutputStream> sessionAudioDataMap = new ConcurrentHashMap<>();
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final ConcurrentMap<String, File> sessionAudioFileMap = new ConcurrentHashMap<>();
-    private final ConversationRepository conversationRepository;
+    private final UserRepository userRepository;
+    private final CallRepository callRepository;
+    private final CallRecordRepository callRecordRepository;
+    private Call call;
+    private String callerPhone;
 
     @Autowired
-    public WebSocketHandler(ConversationRepository conversationRepository) {
-        this.conversationRepository = conversationRepository;
+    public WebSocketHandler(CallRepository callRepository, CallRecordRepository callRecordRepository, UserRepository userRepository) {
+        this.userRepository = userRepository;
+        this.callRepository = callRepository;
+        this.callRecordRepository = callRecordRepository;
         scheduler.scheduleAtFixedRate(this::saveAndSendAudioToFile, 3, 5, TimeUnit.SECONDS);
     }
 
@@ -47,12 +56,10 @@ public class WebSocketHandler extends BinaryWebSocketHandler {
             sessionAudioDataMap.computeIfAbsent(session.getId(), k -> new ByteArrayOutputStream());
             sessionAudioDataMap.get(session.getId()).write(buffer.array(), buffer.position(), buffer.remaining());
 
-            for (WebSocketSession s : sessionMap.values()) {
-                synchronized (s) {
-                    if (s.isOpen() && !s.getId().equals(session.getId()))
-                        s.sendMessage(message);
+            for (ConcurrentWebSocketSessionDecorator sessionDecorator : sessionMap.values()) {
+                if (sessionDecorator.isOpen() && !sessionDecorator.getId().equals(session.getId())) {
+                    sessionDecorator.sendMessage(message);
                 }
-
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,12 +67,37 @@ public class WebSocketHandler extends BinaryWebSocketHandler {
     }
 
     @Override
+    public void handleTextMessage(WebSocketSession session, TextMessage message) {
+        String payload = message.getPayload();
+        System.out.println("Received text message: " + payload);
+    }
+
+    @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        System.out.println("New WebSocket connection established: " + getCallerIdFromSession(session));
         super.afterConnectionEstablished(session);
-        System.out.println("참여자 : " + session.getId());
-        String callerId = getCallerIdFromSession(session);
-        createNewAudioFile(session.getId(), callerId);
-        sessionMap.put(session.getId(), session);
+        String phoneNumber = getCallerIdFromSession(session);
+
+        User user = userRepository.findById("wjdwodnr").get();
+
+        // 수보요원 아니면 수신자로 설정
+        if (!user.getPhone().equals(phoneNumber)) {
+            callerPhone = phoneNumber;
+        }
+
+        // 수보요원이면 call 생성
+        else {
+            call = Call.builder()
+                    .user(user)
+                    .startTime(LocalDateTime.now())
+                    .build();
+
+            callRepository.save(call);
+        }
+
+        ConcurrentWebSocketSessionDecorator decoratorSession = new ConcurrentWebSocketSessionDecorator(session, 10, 1024*1024);
+        createNewAudioFile(session.getId(), phoneNumber);
+        sessionMap.put(session.getId(), decoratorSession);
     }
 
     @Override
@@ -74,11 +106,10 @@ public class WebSocketHandler extends BinaryWebSocketHandler {
         sessionAudioDataMap.remove(session.getId());
         sessionAudioFileMap.remove(session.getId());
         sessionMap.remove(session.getId());
-        session.close();
     }
 
     private void saveAndSendAudioToFile() {
-        for (WebSocketSession session : sessionMap.values()) {
+        for (ConcurrentWebSocketSessionDecorator session : sessionMap.values()) {
             if (!session.isOpen()) {
                 continue;
             }
@@ -86,7 +117,6 @@ public class WebSocketHandler extends BinaryWebSocketHandler {
             byte[] audioData;
             audioData = sessionAudioDataMap.get(session.getId()).toByteArray();
             sessionAudioDataMap.get(session.getId()).reset();
-
 
             if (audioData.length > 0) {
                 System.out.println("Saving audio data to file...");
@@ -100,25 +130,24 @@ public class WebSocketHandler extends BinaryWebSocketHandler {
         }
     }
 
-    private void processAudioFile(WebSocketSession session) {
+    private void processAudioFile(ConcurrentWebSocketSessionDecorator session) {
         try {
             File audioFile = sessionAudioFileMap.get(session.getId());
             if (audioFile.exists() && audioFile.length() > 0) {
                 byte[] audioData = Files.readAllBytes(audioFile.toPath());
-                createNewAudioFile(session.getId(), getCallerIdFromSession(session));
 
-//                sendToClovaSTT(audioData).subscribe(result -> {
-//                    if (result != null && !result.isEmpty()) {
-//                        saveConversation(session, result);
-//                        System.out.println("Transcription result: \n" + result);
-//                    }
-//
-//                    String callerId = getCallerIdFromSession(session);
-//                    createNewAudioFile(session.getId(), callerId);
-//                }, error -> {
-//                    System.err.println("Error during transcription: " + error.getMessage());
-//                    error.printStackTrace();
-//                });
+                sendToClovaSTT(audioData).subscribe(result -> {
+                    if (result != null && !result.isEmpty()) {
+                        saveConversation(session, result);
+                        System.out.println("Transcription result: \n" + result);
+                    }
+
+                    String callerId = getCallerIdFromSession(session.getDelegate());
+                    createNewAudioFile(session.getId(), callerId);
+                }, error -> {
+                    System.err.println("Error during transcription: " + error.getMessage());
+                    error.printStackTrace();
+                });
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -216,15 +245,16 @@ public class WebSocketHandler extends BinaryWebSocketHandler {
                 }
             }
         }
-
         return callerId;
     }
 
-    private void saveConversation(WebSocketSession session, String transcription) {
-        Conversation conversation = new Conversation();
-        conversation.setStartTime(LocalDateTime.now());
-        conversation.setCallerId(getCallerIdFromSession(session));
-        conversation.setTranscription(transcription);
-        conversationRepository.save(conversation);
+    private void saveConversation(ConcurrentWebSocketSessionDecorator session, String transcription) {
+        CallRecord callRecord = CallRecord.builder()
+                .call(call)
+                .transcription(transcription)
+                .speakerPhoneNumber(getCallerIdFromSession(session.getDelegate()))
+                .build();
+
+        callRecordRepository.save(callRecord);
     }
 }
