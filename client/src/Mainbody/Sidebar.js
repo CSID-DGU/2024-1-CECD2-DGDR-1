@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Sidebar.css';
 
 const Sidebar = ({ savedManuals, onSelectManual }) => {
   const [protocols, setProtocols] = useState([
-    { id: 1, text: 'Text', completed: false },
-    { id: 2, text: 'Text', completed: false },
-    { id: 3, text: 'Text', completed: false },
-    { id: 4, text: 'Text', completed: false },
+    { id: 1, text: '환자 상태 확인', completed: false },
+    { id: 2, text: '현장 조건 파악', completed: false },
+    { id: 3, text: '초동조치 지도', completed: false },
+    { id: 4, text: '출동 확인 완료', completed: false },
   ]);
 
   const toggleProtocol = (id) => {
@@ -15,10 +15,26 @@ const Sidebar = ({ savedManuals, onSelectManual }) => {
     ));
   };
 
+  useEffect(() => {
+    const handleKeydown = (e) => {
+      if (e.altKey) {
+        const protocolNumber = parseInt(e.key);
+        if (protocolNumber >= 1 && protocolNumber <= protocols.length) {
+          toggleProtocol(protocolNumber);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeydown);
+    return () => {
+      window.removeEventListener('keydown', handleKeydown);
+    };
+  }, [protocols]);
+
   return (
     <div className="sidebar">
       <div className="manual-list">
-        <h3>열람 매뉴얼 목록</h3>
+        <h3 className="top-title">열람 매뉴얼 목록</h3>
         {savedManuals.map((manual, index) => (
           <div
             key={index}
